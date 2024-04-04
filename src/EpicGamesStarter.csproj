@@ -7,7 +7,7 @@
     <Configuration>Release</Configuration>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
