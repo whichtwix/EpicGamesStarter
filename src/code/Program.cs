@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace EpicGamesStarter
 {
@@ -29,7 +26,7 @@ namespace EpicGamesStarter
             try
             {
                 Console.WriteLine("Any open Among Us windows will be closed now");
-                CloseAllInstances();
+                if (InstancesClosed()) await Task.Delay(1000);
 
                 Console.WriteLine("Starting Among Us in the epic folder to retrieve arguments");
                 var BaseGame = Process.Start($@"{Launcher}\EpicGamesLauncher.exe", $"com.epicgames.launcher://apps/{AppId}?action=launch&silent=true");
@@ -82,15 +79,16 @@ namespace EpicGamesStarter
             }
         }
 
-        public static void CloseAllInstances()
+        public static bool InstancesClosed()
         {
             var instances = Process.GetProcessesByName("Among Us");
-            if (instances.Length == 0) return;
+            if (instances.Length == 0) return false;
 
             foreach (var instance in instances)
             {
                 instance.Kill();
             }
+            return true;
         }
     }
 }
