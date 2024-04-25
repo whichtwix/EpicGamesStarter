@@ -69,7 +69,7 @@ namespace EpicGamesStarter
                 process.StartInfo = processStartInfo;
                 process.Start();
                 var output = process.StandardOutput.ReadToEnd();
-                File.WriteAllText("error.txt", output);
+                output = output[output.IndexOf("[\r\n    {")..];
                 var data = JsonSerializer.Deserialize<List<ProcessData>>(output, Opts).Where(x => x.CommandLine != null);
                 return data.FirstOrDefault(x => x.CommandLine.Contains("Among Us.exe"))!;
             }
