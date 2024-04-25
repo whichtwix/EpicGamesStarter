@@ -69,6 +69,7 @@ namespace EpicGamesStarter
                 process.StartInfo = processStartInfo;
                 process.Start();
                 var output = process.StandardOutput.ReadToEnd();
+                Console.WriteLine($" output: {output}");
                 var data = JsonSerializer.Deserialize<List<ProcessData>>(output, Opts).Where(x => x.CommandLine != null);
                 return data.FirstOrDefault(x => x.CommandLine.Contains("Among Us.exe"))!;
             }
