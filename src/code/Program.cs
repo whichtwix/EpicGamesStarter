@@ -55,27 +55,40 @@ namespace EpicGamesStarter
         
         public static ProcessData GetIdAndCommandLine()
         {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = "Get-CimInstance -ClassName Win32_Process | Select ProcessId, CommandLine | ConvertTo-json",
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+
+            using var process = new Process();
+            process.StartInfo = processStartInfo;
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd();
             try
             {
-                var processStartInfo = new ProcessStartInfo
-                {
-                    FileName = "powershell.exe",
-                    Arguments = "Get-CimInstance -ClassName Win32_Process | Select ProcessId, CommandLine | ConvertTo-json",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                };
-
-                using var process = new Process();
-                process.StartInfo = processStartInfo;
-                process.Start();
-                var output = process.StandardOutput.ReadToEnd();
                 output = output[output.IndexOf("[\r\n    {")..];
                 var data = JsonSerializer.Deserialize<List<ProcessData>>(output, Opts).Where(x => x.CommandLine != null);
                 return data.FirstOrDefault(x => x.CommandLine.Contains("Among Us.exe"))!;
             }
+            catch (JsonException j)
+            {
+                // a powershell error probably ocurred
+                var jsonstart = output.IndexOf("[\r\n    {");
+                if (jsonstart != -1)
+                {
+                    Console.WriteLine(output[0..jsonstart]);
+                }
+                Console.WriteLine(j);
+                Console.ReadLine();
+                return null!;
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                Console.ReadLine();
                 return null!;
             }
         }
