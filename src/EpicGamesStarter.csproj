@@ -10,5 +10,6 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <DebugType>embedded</DebugType>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 </Project>
