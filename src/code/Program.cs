@@ -29,7 +29,8 @@ namespace EpicGamesStarter
                 if (InstancesClosed()) await Task.Delay(1000);
 
                 Console.WriteLine("Starting Among Us in the epic folder to retrieve arguments");
-                var BaseGame = Process.Start($@"{Launcher}\EpicGamesLauncher.exe", $"com.epicgames.launcher://apps/{AppId}?action=launch&silent=true");
+                
+                LaunchBaseGame();
                 while (Process.GetProcessesByName("Among Us").Length == 0)
                 {
                     Console.WriteLine("Waiting...");
@@ -78,6 +79,20 @@ namespace EpicGamesStarter
                 Console.WriteLine(e);
                 return null!;
             }
+        }
+
+        public static void LaunchBaseGame() 
+        {
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = $"com.epicgames.launcher://apps/{AppId}?action=launch&silent=true",
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+            };
+
+            using var process = new Process();
+            process.StartInfo = processStartInfo;
+            process.Start();
         }
 
         public static bool InstancesClosed()
